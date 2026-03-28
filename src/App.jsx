@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ContactForm from "./components/ContactForm";
 import ContactList from "./components/ContactList";
 import Filter from "./components/Filter";
@@ -11,8 +11,19 @@ const defaultContacts = [
 ];
 
 export default function App() {
-  const [contacts, setContacts] = useState(defaultContacts);
+  const [contacts, setContacts] = useState(() => {
+    const savedContacts = window.localStorage.getItem("contacts");
+    if (savedContacts !== null) {
+      return JSON.parse(savedContacts);
+    }
+    return defaultContacts;
+  });
+
   const [filter, setFilter] = useState("");
+
+  useEffect(() => {
+    window.localStorage.setItem("contacts", JSON.stringify(contacts));
+  }, [contacts]);
 
   const addContact = (newContact) => {
     if (contacts.some((contact) => contact.name === newContact.name)) {
