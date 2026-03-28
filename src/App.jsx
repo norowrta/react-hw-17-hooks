@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import ContactForm from "./components/ContactForm";
 import ContactList from "./components/ContactList";
 import Filter from "./components/Filter";
+import { ContactsContext } from "./ContactsContext";
 
 const defaultContacts = [
   { id: "id-1", name: "Walter White", number: "505-164-3287" },
@@ -20,6 +21,8 @@ export default function App() {
   });
 
   const [filter, setFilter] = useState("");
+
+  const appContainerRef = useRef(null);
 
   useEffect(() => {
     window.localStorage.setItem("contacts", JSON.stringify(contacts));
@@ -43,16 +46,15 @@ export default function App() {
   );
 
   return (
-    <div className="app-container">
-      <h1>Phonebook</h1>
-      <ContactForm onAdd={addContact} />
-
-      <h2>Contacts</h2>
-      <Filter filter={filter} setFilter={setFilter} />
-      <ContactList
-        onDelete={deleteContact}
-        filteredContacts={filteredContacts}
-      />
-    </div>
+    <ContactsContext.Provider value={{ contacts, addContact, deleteContact, filter, setFilter, filteredContacts }}>
+      <div className="app-container" ref={appContainerRef}>
+        <h1>Phonebook</h1>
+        <ContactForm />
+        
+        <h2>Contacts</h2>
+        <Filter />
+        <ContactList />
+      </div>
+    </ContactsContext.Provider>
   );
 }

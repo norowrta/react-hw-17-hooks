@@ -1,18 +1,15 @@
-export default function ContactList({ onDelete, filteredContacts }) {
+import { useContext } from "react";
+import { ContactsContext } from "../ContactsContext";
+
+export default function ContactList() {
+  const { filteredContacts, deleteContact } = useContext(ContactsContext);
+
   return (
-    <ul className="contact-list">
-      {filteredContacts.map((contact) => (
-        <li key={contact.id} className="contact-item">
-          <div className="contact-info">
-            <span className="contact-name">{contact.name}:</span>
-            <span className="contact-number">{contact.number}</span>
-          </div>
-          <button
-            className="delete-button"
-            onClick={() => onDelete(contact.id)}
-          >
-            Delete
-          </button>
+    <ul>
+      {filteredContacts.map(({ id, name, number }) => (
+        <li key={id}>
+          {name}: {number}
+          <button onClick={() => deleteContact(id)}>Delete</button>
         </li>
       ))}
     </ul>

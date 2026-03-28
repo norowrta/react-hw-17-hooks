@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { nanoid } from "nanoid";
+import { ContactsContext } from "../ContactsContext";
 
-export default function ContactForm({ onAdd }) {
+export default function ContactForm() {
+  const { addContact } = useContext(ContactsContext);
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
 
@@ -14,7 +16,7 @@ export default function ContactForm({ onAdd }) {
       number,
     };
 
-    onAdd(newContact);
+    addContact(newContact);
     setName("");
     setNumber("");
   };
